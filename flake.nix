@@ -22,6 +22,7 @@
           mkShell {
             buildInputs = [
               gcc-arm-embedded
+              platformio
               stlink
               openocd
               clang-tools

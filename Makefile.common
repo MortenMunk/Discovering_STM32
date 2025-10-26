@@ -1,0 +1,40 @@
+ELF     = $(PROJECT).elf
+MCU     = cortex-m3
+PTYPE   = STM32F103xB
+
+CC       = arm-none-eabi-gcc
+LD       = arm-none-eabi-gcc
+AS       = arm-none-eabi-as
+OBJCOPY  = arm-none-eabi-objcopy
+
+CUBEROOT = ../STM32CubeF1
+CORE     = $(CUBEROOT)/Drivers/CMSIS/Core/Include
+DEVICE   = $(CUBEROOT)/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+HALINC   = $(CUBEROOT)/Drivers/STM32F1xx_HAL_Driver/Inc
+HALSRC   = $(CUBEROOT)/Drivers/STM32F1xx_HAL_Driver/Src
+
+CFLAGS  = -mcpu=$(MCU) -mthumb -O0 -g3 -Wall -ffunction-sections -fdata-sections
+CFLAGS += -I. -I.. -I$(CORE) -I$(DEVICE) -I$(HALINC)
+CFLAGS += -D$(PTYPE) -DUSE_HAL_DRIVER
+
+LDSCRIPT = ../STM32F103RBTx_FLASH.ld
+LDFLAGS  = -T$(LDSCRIPT) -Wl,--gc-sections
+
+SRC  = main.c ../system_stm32f1xx.c ../startup_stm32f103xb.s
+SRC += $(filter-out $(HALSRC)/stm32f1xx_hal_timebase_tim_template.c $(HALSRC)/stm32f1xx_hal_timebase_rtc_alarm_template.c, $(wildcard $(HALSRC)/*.c))
+OBJ  = $(SRC:.c=.o)
+OBJ  := $(OBJ:.s=.o)
+
+$(ELF): $(OBJ)
+	$(LD) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ)
+	$(OBJCOPY) -O binary $@ $(PROJECT).bin
+	@echo "✅ Build complete → $@"
+
+%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+%.o: %.s
+	$(AS) -c $< -o $@
+
+clean:
+	rm -f $(OBJ) $(ELF) $(PROJECT).bin

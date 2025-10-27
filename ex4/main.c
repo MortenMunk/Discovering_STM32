@@ -1,3 +1,6 @@
-#include "STM32F1xx.h"
+#include "stm32f1xx_hal.h"
 
-int main() { return 0; }
+int main() {
+  HAL_Init();
+  return 0;
+}

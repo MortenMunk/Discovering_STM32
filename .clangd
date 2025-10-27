@@ -1,0 +1,9 @@
+CompileFlags:
+  Add:
+    - --target=arm-none-eabi
+    - -I/home/morten/software/Discovering_STM32/ex4
+    - -I/home/morten/software/Discovering_STM32/STM32CubeF1/Drivers/STM32F1xx_HAL_Driver/Inc
+    - -I/home/morten/software/Discovering_STM32/STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+    - -I/home/morten/software/Discovering_STM32/STM32CubeF1/Drivers/CMSIS/Include
+    - -DSTM32F103xB
+    - -mthumb

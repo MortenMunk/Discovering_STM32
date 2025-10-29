@@ -22,13 +22,17 @@
           mkShell {
             buildInputs = [
               gcc-arm-embedded
-              platformio
               stlink
               openocd
               clang-tools
+              bear
               gdb
               gnumake
             ];
+
+            shellHook = ''
+              echo "Remember to run:  bear -- make"
+            '';
           };
       }
     );

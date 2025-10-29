@@ -1,0 +1,28 @@
+[
+  {
+    "arguments": [
+      "/nix/store/v9p5md3d4aaqwc9i9hlaxkl7nawd9vrc-gcc-arm-embedded-14.3.rel1/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m3",
+      "-mthumb",
+      "-O0",
+      "-g3",
+      "-Wall",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-I.",
+      "-I..",
+      "-I../STM32CubeF1/Drivers/CMSIS/Core/Include",
+      "-I../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+      "-I../STM32CubeF1/Drivers/STM32F1xx_HAL_Driver/Inc",
+      "-DSTM32F103xB",
+      "-DUSE_HAL_DRIVER",
+      "-o",
+      "main.o",
+      "main.c"
+    ],
+    "directory": "/home/morten/software/Discovering_STM32/ex4",
+    "file": "/home/morten/software/Discovering_STM32/ex4/main.c",
+    "output": "/home/morten/software/Discovering_STM32/ex4/main.o"
+  }
+]

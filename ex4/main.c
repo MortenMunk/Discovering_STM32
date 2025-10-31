@@ -1,4 +1,6 @@
+#include "stm32f103xb.h"
 #include "stm32f1xx_hal.h"
+#include <stdint.h>
 
 void SystemClock_Config(void) {
   RCC_OscInitTypeDef osc = {0};
@@ -31,6 +33,8 @@ int main(void) {
   gpio.Pull = GPIO_NOPULL;
   gpio.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &gpio);
+  // uncomment below if you want to debug an incorrect init
+  // HAL_GPIO_Init((GPIO_TypeDef *)66, &gpio);
 
   while (1) {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -39,3 +43,7 @@ int main(void) {
 }
 
 void SysTick_Handler(void) { HAL_IncTick(); }
+void assert_failed(uint8_t *file, uint32_t line) {
+  while (1)
+    ;
+}

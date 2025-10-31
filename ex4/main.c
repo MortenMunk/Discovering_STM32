@@ -1,44 +1,41 @@
-#include "stm32f103xb.h"
 #include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_flash.h"
-#include "stm32f1xx_hal_gpio.h"
-#include "stm32f1xx_hal_rcc.h"
-#include "stm32f1xx_hal_rcc_ex.h"
 
-void init() {
+void SystemClock_Config(void) {
+  RCC_OscInitTypeDef osc = {0};
+  RCC_ClkInitTypeDef clk = {0};
+
+  osc.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  osc.HSIState = RCC_HSI_ON;
+  osc.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  osc.PLL.PLLState = RCC_PLL_NONE;
+  HAL_RCC_OscConfig(&osc);
+
+  clk.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
+                  RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  clk.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  clk.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  clk.APB1CLKDivider = RCC_HCLK_DIV1;
+  clk.APB2CLKDivider = RCC_HCLK_DIV1;
+  HAL_RCC_ClockConfig(&clk, FLASH_LATENCY_0);
+}
+
+int main(void) {
   HAL_Init();
+  SystemClock_Config();
+
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+  GPIO_InitTypeDef gpio = {0};
+  gpio.Pin = GPIO_PIN_5;
+  gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio.Pull = GPIO_NOPULL;
+  gpio.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &gpio);
 
-  RCC_OscInitTypeDef osc_struct = {0};
-  osc_struct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  osc_struct.HSEState = RCC_HSE_ON;
-  osc_struct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  osc_struct.PLL.PLLState = RCC_PLL_ON;
-  osc_struct.PLL.PLLMUL = RCC_PLL_MUL9;
-  osc_struct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-
-  RCC_ClkInitTypeDef clock_stuct = {0};
-  clock_stuct.ClockType = RCC_CLOCKTYPE_SYSCLK;
-  clock_stuct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  clock_stuct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  clock_stuct.APB1CLKDivider = RCC_HCLK_DIV2;
-  clock_stuct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  HAL_RCC_OscConfig(&osc_struct);
-  HAL_RCC_ClockConfig(&clock_stuct, FLASH_LATENCY_2);
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-}
-
-int main() {
-  init();
   while (1) {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    HAL_Delay(200);
+    HAL_Delay(500);
   }
 }
+
+void SysTick_Handler(void) { HAL_IncTick(); }
